@@ -59,16 +59,28 @@ npm run dev
 
 ### 3. Deploy
 
-The repository includes a GitHub Actions workflow (`.github/workflows/deploy.yml`)
-that builds and deploys to **GitHub Pages** on every push to `main`.
+The site is published to **GitHub Pages** from the `gh-pages` branch and is
+live at **https://msindukuri-hub.github.io/sprintflow/**.
 
-To wire the database into the deployed site, set these as **repository variables**
-(Settings → Secrets and variables → Actions → Variables):
+To redeploy after changing the app:
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+```bash
+BASE_PATH=/sprintflow/ npm run build
+# then push the contents of dist/ to the gh-pages branch
+```
 
-Then push again — the workflow bakes them into the build.
+To wire the database into the deployed site, bake the Supabase values into the
+build before publishing:
+
+```
+VITE_SUPABASE_URL=https://<your-project-ref>.supabase.co
+VITE_SUPABASE_ANON_KEY=<your-anon-public-key>
+```
+
+> Optional: for automatic deploys on every push to `main`, add a GitHub Actions
+> workflow at `.github/workflows/deploy.yml` that builds with
+> `BASE_PATH=/sprintflow/` and uploads `dist/` to GitHub Pages
+> (`actions/upload-pages-artifact` + `actions/deploy-pages`).
 
 ## Project structure
 
