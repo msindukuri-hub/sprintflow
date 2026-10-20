@@ -82,6 +82,43 @@ VITE_SUPABASE_ANON_KEY=<your-anon-public-key>
 > `BASE_PATH=/sprintflow/` and uploads `dist/` to GitHub Pages
 > (`actions/upload-pages-artifact` + `actions/deploy-pages`).
 
+### 4. Run with Docker
+
+The repo includes a multi-stage `Dockerfile` (Node builds, nginx serves) and a
+`docker-compose.yml`.
+
+**Quick start (preview mode — no database):**
+
+```bash
+docker compose up --build
+# → http://localhost:8080
+```
+
+**With your Supabase project** (credentials are baked into the JS bundle at
+build time, so they must be provided at build time):
+
+```bash
+export VITE_SUPABASE_URL=https://<your-project-ref>.supabase.co
+export VITE_SUPABASE_ANON_KEY=<your-anon-public-key>
+docker compose up --build
+```
+
+Or build the image directly:
+
+```bash
+docker build \
+  --build-arg VITE_SUPABASE_URL=https://<your-project-ref>.supabase.co \
+  --build-arg VITE_SUPABASE_ANON_KEY=<your-anon-public-key> \
+  -t sprintflow .
+
+docker run -p 8080:80 sprintflow
+```
+
+Notes:
+- The container serves the app at `/` (root path), so no `BASE_PATH` is needed.
+- nginx handles the SPA fallback (deep links like `/projects/…/board` work).
+- A health check pings `/` every 30s.
+
 ## Project structure
 
 ```
