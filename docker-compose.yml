@@ -1,0 +1,13 @@
+services:
+  sprintflow:
+    build:
+      context: .
+      args:
+        # Bake your Supabase project values into the build.
+        # Leave blank to run in preview (setup) mode.
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
+    image: sprintflow:latest
+    ports:
+      - "8080:80"
+    restart: unless-stopped
